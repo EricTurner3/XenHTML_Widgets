@@ -1,0 +1,120 @@
+<html>
+<head>
+    <!-- https://incendo.ws/documentation/widget-api/additional-documentation/widget-setup/configuration.html -->
+</head>
+<style>
+    #searchbar{
+        width: 100%
+    }
+    @font-face {
+    font-family: Roboto;
+    src: local("Roboto"),
+        url(Roboto.ttf);}
+    @font-face {
+    font-family: RobotoCondensed;
+    src: local("RobotoCondensed-Regular"),
+        url(RobotoCondensed-Regular.ttf);}
+    input {
+        background-image:url('google.png');
+        background-repeat: no-repeat;
+        background-size: 66px 22px;
+        background-position: 20px center;
+        border: 0px solid;
+        text-indent: 9999px;
+        transition: all 0.2s;
+        height: 50px;
+        width: 100%;
+        font-size: 16px;
+        font-family: Roboto;
+        color: #212121;
+        box-shadow: 0px 1px 5px rgba(0,0,0,0.40);}
+    input:focus {
+        text-indent: 40px;
+        background:url('typing.gif');
+        background-size: 56px 32px;
+        background-repeat: no-repeat;
+        background-position: -6px center;
+        background-color: #FFF;
+        transition: all 0.3s ease-out;}
+    #mic {
+        width: 28px;
+        height: 28px;
+        border-radius: 30px;
+        position: absolute;
+        margin-top: 0px;
+        margin-left: -51px;
+        padding: 11px;
+        background-color: #FFF;}
+    img {	 
+        width: 27px;
+        height: 27px;}
+    #label { 
+        color: #B1B1B1;
+        height: 33px;
+        width: 160px;
+        font-size: 16px;
+        padding-top: 15px;
+        margin-left: -160px;
+        position: absolute;
+        text-align: left;
+        font-family: RobotoCondensed;
+        background-color: transparent;
+        border-radius: 2px;
+        border: 0px solid rgba(0, 0, 0, 0.00);
+        z-index: 0;
+    }
+</style>
+<body>
+
+    <div id="searchbar">
+        
+        <input id="search" type="text" onkeydown="keyDown(event)" placeholder="Search or type URL" onclick="hidelabel()" onblur="showlabel()">
+                        
+        <span id="label"> </span>
+            
+        <a id="mic" onclick="assistant()"><img src="button.png"></a>
+            
+    </div>
+
+</body>
+<script>
+function assistant(){
+    api.apps.launchApplication(config.voice);
+}
+
+document.getElementById("searchbar").style.opacity = config.opacity
+
+document.getElementById("search").style.borderRadius = config.radius + 'px'
+
+document.getElementById("search").style.backgroundImage =  config.image
+
+if(config.label != "None")
+    document.getElementById("label").innerHTML = config.label;
+
+function hidelabel() {
+    document.getElementById("label").style.display = "none"
+    document.getElementById("search").style.backgroundImage = "url('typing.gif')";
+
+}
+
+function showlabel() {
+    document.getElementById("label").style.display = "inherit"
+    document.getElementById("search").style.backgroundImage =  config.image;
+}
+
+
+function keyDown(a) {
+    var b;
+    window.event ? b = window.event.keyCode : a && (b = a.which);
+    inp = document.getElementById("search");
+    13 == b && launch()
+}
+
+function launch() {
+    var searchbar = document.getElementById("search");
+    // open browser
+    window.location = config.engine + encodeURIComponent(searchbar.value);
+    // clear input
+    setTimeout(function() {searchbar.value = ""}, 2E3);
+};
+</script>
